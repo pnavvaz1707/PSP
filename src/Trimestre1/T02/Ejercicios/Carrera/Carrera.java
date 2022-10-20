@@ -11,21 +11,7 @@ public class Carrera extends Thread {
 
     @Override
     public void run() {
-        try {
-            System.out.println("Preparados");
-            sleep(1000);
-            System.out.println("Listos");
-            sleep(1000);
-            System.out.println("Ya!");
-            sleep(1000);
-            p.indicarPistoletazo();
-            p.resultadosCarrera();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static void main(String[] args) {
-
+        p.indicarPistoletazo();
+        p.resultadosCarrera();
     }
 }

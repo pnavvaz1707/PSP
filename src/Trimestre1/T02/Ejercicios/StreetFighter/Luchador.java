@@ -15,7 +15,7 @@ public class Luchador extends Thread {
 
     @Override
     public void run() {
-        while (vida >= 0 && !r.isTerminado()) {
+        while (vida > 0 && !r.isTerminado()) {
             int opcion = (int) (Math.random() * 3 + 1);
             switch (opcion) {
                 case 1:

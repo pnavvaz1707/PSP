@@ -5,29 +5,28 @@ public class Atleta extends Thread {
     Pista p;
     int distancaRecorrida = 0;
 
-    int tiempoEmpleado = 0;
-
     public Atleta(String name, Pista p) {
         this.setName(name);
         this.p = p;
-        p.sumarAtleta();
     }
 
     @Override
     public void run() {
+        p.prepararse();
         while (distancaRecorrida<p.getDistanciaPista()) {
-            p.correr(this);
-            distancaRecorrida++;
-            System.out.println(this.getName() + " - " + distancaRecorrida + "m");
+            try {
+                int tiempoZancada = tiempoZancada();
+                sleep(tiempoZancada);
+                distancaRecorrida++;
+                System.out.println(this.getName() + " zancada dada en " + tiempoZancada + " ms | Distancia actual (" + distancaRecorrida + ")");
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
         p.notificarDorsal(this);
     }
 
-    public void setTiempoEmpleado(int tiempoEmpleado) {
-        this.tiempoEmpleado += tiempoEmpleado;
-    }
-
-    public int getTiempoEmpleado() {
-        return tiempoEmpleado;
+    public int tiempoZancada() {
+        return (int) ((Math.random() * 30) + 90);
     }
 }

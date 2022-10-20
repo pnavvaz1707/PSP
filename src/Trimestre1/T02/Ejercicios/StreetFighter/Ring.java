@@ -15,16 +15,18 @@ public class Ring {
                 e.printStackTrace();
             }
         }
-        try {
-            l.setAccionElegida("Defender");
-            System.out.println("El " + l.getName() + " ha elegido " + l.getAccionElegida());
+        if (!terminado) {
+            try {
+                l.setAccionElegida("Defender");
+                System.out.println("El " + l.getName() + " ha elegido " + l.getAccionElegida());
 
-            l.setTurno(true);
+                l.setTurno(true);
 
-            notifyAll();
-            wait();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+                notifyAll();
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -36,18 +38,20 @@ public class Ring {
                 e.printStackTrace();
             }
         }
-        try {
-            l.setAccionElegida("CargarPoder");
-            System.out.println("El " + l.getName() + " ha elegido " + l.getAccionElegida());
+        if (!terminado) {
+            try {
+                l.setAccionElegida("CargarPoder");
+                System.out.println("El " + l.getName() + " ha elegido " + l.getAccionElegida());
 
-            l.setPoderCargado(true);
+                l.setPoderCargado(true);
 
-            l.setTurno(true);
+                l.setTurno(true);
 
-            notifyAll();
-            wait();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+                notifyAll();
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -59,20 +63,22 @@ public class Ring {
                 e.printStackTrace();
             }
         }
-        try {
-            if (l.isPoderCargado()) {
-                l.setAccionElegida("Golpear");
-                System.out.println("El " + l.getName() + " ha elegido " + l.getAccionElegida());
+        if (!terminado) {
+            try {
+                if (l.isPoderCargado()) {
+                    l.setAccionElegida("Golpear");
+                    System.out.println("El " + l.getName() + " ha elegido " + l.getAccionElegida());
 
-                l.setPoderCargado(false);
+                    l.setPoderCargado(false);
 
-                l.setTurno(true);
+                    l.setTurno(true);
 
-                notifyAll();
-                wait();
+                    notifyAll();
+                    wait();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 
@@ -119,12 +125,18 @@ public class Ring {
                 break;
         }
 
-        l1.setTurno(false);
-        l2.setTurno(false);
-
-        if (l1.getVida() == 0 || l2.getVida() == 0) {
+        if (l1.getVida() <= 0 || l2.getVida() <= 0) {
             terminado = true;
         }
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        l1.setTurno(false);
+        l2.setTurno(false);
 
         System.out.println("Vida restante " + l1.getName() + ": " + l1.getVida());
         System.out.println("Vida restante " + l2.getName() + ": " + l2.getVida());
