@@ -1,5 +1,7 @@
 package Trimestre1.T02.Ejercicios.StreetFighter;
 
+import Trimestre1.T02.Colores;
+
 import java.util.ArrayList;
 
 public class Ring {
@@ -8,7 +10,7 @@ public class Ring {
     boolean terminado = false;
 
     public synchronized void defender(Luchador l) {
-        while (l.isTurno()){
+        while (l.isTurno()) {
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -18,7 +20,12 @@ public class Ring {
         if (!terminado) {
             try {
                 l.setAccionElegida("Defender");
-                System.out.println("El " + l.getName() + " ha elegido " + l.getAccionElegida());
+
+                if (l.getName().equals("Luchador 1")) {
+                    Colores.imprimirMorado("El " + l.getName() + " ha elegido " + l.getAccionElegida());
+                } else {
+                    Colores.imprimirVerde("El " + l.getName() + " ha elegido " + l.getAccionElegida());
+                }
 
                 l.setTurno(true);
 
@@ -31,7 +38,7 @@ public class Ring {
     }
 
     public synchronized void cargarPoder(Luchador l) {
-        while (l.isTurno()){
+        while (l.isTurno()) {
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -41,7 +48,12 @@ public class Ring {
         if (!terminado) {
             try {
                 l.setAccionElegida("CargarPoder");
-                System.out.println("El " + l.getName() + " ha elegido " + l.getAccionElegida());
+
+                if (l.getName().equals("Luchador 1")) {
+                    Colores.imprimirMorado("El " + l.getName() + " ha elegido " + l.getAccionElegida());
+                } else {
+                    Colores.imprimirVerde("El " + l.getName() + " ha elegido " + l.getAccionElegida());
+                }
 
                 l.setPoderCargado(true);
 
@@ -56,7 +68,7 @@ public class Ring {
     }
 
     public synchronized void golpear(Luchador l) {
-        while (l.isTurno()){
+        while (l.isTurno()) {
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -67,7 +79,12 @@ public class Ring {
             try {
                 if (l.isPoderCargado()) {
                     l.setAccionElegida("Golpear");
-                    System.out.println("El " + l.getName() + " ha elegido " + l.getAccionElegida());
+
+                    if (l.getName().equals("Luchador 1")) {
+                        Colores.imprimirMorado("El " + l.getName() + " ha elegido " + l.getAccionElegida());
+                    } else {
+                        Colores.imprimirVerde("El " + l.getName() + " ha elegido " + l.getAccionElegida());
+                    }
 
                     l.setPoderCargado(false);
 
@@ -138,8 +155,23 @@ public class Ring {
         l1.setTurno(false);
         l2.setTurno(false);
 
-        System.out.println("Vida restante " + l1.getName() + ": " + l1.getVida());
-        System.out.println("Vida restante " + l2.getName() + ": " + l2.getVida());
+        Colores.imprimirMorado("Vida restante " + l1.getName() + ": " + l1.getVida());
+        Colores.imprimirVerde("Vida restante " + l2.getName() + ": " + l2.getVida());
+
+        Colores.imprimirRojo("////////////////////////////////////////////////////////////////////////////////");
+
+        if (terminado) {
+
+            if (l1.getVida() > l2.getVida()) {
+                Colores.imprimirAzul("El ganador es " + l1.getName());
+            }
+            else if (l2.getVida() > l1.getVida()) {
+                Colores.imprimirAzul("El ganador es " + l2.getName());
+            }
+            else {
+                Colores.imprimirAzul("Ha sido empate");
+            }
+        }
 
         notifyAll();
     }
