@@ -1,7 +1,7 @@
 package Trimestre1.T02.Ejercicios.StreetFighter;
 
 public class Luchador extends Thread {
-    int vida = 5;
+    int vida = 50;
     Ring r;
     boolean poderCargado = false;
     String accionElegida = "";

@@ -10,45 +10,36 @@ public class Cruce {
     ArrayList<Vehiculo> coches = new ArrayList<>();
     ArrayList<Vehiculo> camiones = new ArrayList<>();
 
-    int vehiculos = 0;
-
-    public synchronized void llegar(Vehiculo vehiculo) {
-        vehiculos++;
-        imprimirTexto(vehiculo.getColor(), "Ha llegado " + vehiculo.getName());
+    public void llegar(Vehiculo vehiculo) {
 
         if (vehiculo.tipo == TiposVehiculo.BICICLETA) {
-            bicicletas.add(vehiculo);
+            getBicicletas().add(vehiculo);
 
         } else if (vehiculo.tipo == TiposVehiculo.COCHE) {
-            coches.add(vehiculo);
+            getCoches().add(vehiculo);
 
         } else {
-            camiones.add(vehiculo);
+            getCamiones().add(vehiculo);
         }
+
+        imprimirTexto(vehiculo.getColor(), "Ha llegado " + vehiculo.getName());
     }
 
     public synchronized void cruzar(Vehiculo vehiculo) {
-        while (vehiculos < 20) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
         if (vehiculo.tipo == TiposVehiculo.COCHE) {
 
-            while (bicicletas.size() > 0) {
+            while (getBicicletas().size() > 0) {
                 try {
                     wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-            coches.remove(vehiculo);
+            getCoches().remove(vehiculo);
 
         } else if (vehiculo.tipo == TiposVehiculo.CAMION) {
 
-            while (bicicletas.size() > 0 || coches.size() > 0) {
+            while (getBicicletas().size() > 0 || getCoches().size() > 0) {
                 try {
                     wait();
                 } catch (InterruptedException e) {
@@ -56,14 +47,27 @@ public class Cruce {
                 }
             }
 
-            camiones.remove(vehiculo);
+            getCamiones().remove(vehiculo);
 
         } else {
 
-            bicicletas.remove(vehiculo);
+            getBicicletas().remove(vehiculo);
         }
         imprimirTexto(vehiculo.getColor(), "----------------- Ha cruzado " + vehiculo.getName());
         notifyAll();
+    }
+
+
+    public synchronized ArrayList<Vehiculo> getBicicletas() {
+        return bicicletas;
+    }
+
+    public synchronized ArrayList<Vehiculo> getCoches() {
+        return coches;
+    }
+
+    public synchronized ArrayList<Vehiculo> getCamiones() {
+        return camiones;
     }
 
 
