@@ -5,24 +5,21 @@ import Trimestre1.T02.Colores;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Censo {
-
+public class ColegioElectoral {
 
     ArrayList<Integer> ids = new ArrayList<>(List.of(1, 2, 3, 4, 6, 8, 10, 11, 13, 14, 15, 18, 19, 20, 22, 23, 24, 28, 29, 30));
     ArrayList<Integer> cola = new ArrayList<>();
     boolean recontando = false;
-
-    int numVotantes = 0;
-    int votos = 0;
+    int numVotos = 0;
 
     public void estaEnElCenso(Votante votante) {
-        System.out.println("ID --> " + votante.getDni());
+        Colores.imprimirAzul("El votante con dni " + votante.getDni() + " empieza a mirar si esta en el censo");
         if (ids.contains(votante.getDni())) {
-            Colores.imprimirMorado("El cliente con dni " + votante.getDni() + " ha entrado en la cola del censo (turno " + (getCola().size()) + ")");
             getCola().add(votante.getDni());
+            Colores.imprimirVerde("El votante con dni " + votante.getDni() + " ha entrado en la cola del censo turno (" + getCola().size() + ")");
             votante.puedeVotar = true;
         } else {
-            Colores.imprimirRojo("El cliente con dni " + votante.getDni() + " no está en el censo");
+            Colores.imprimirRojo("El votante con dni " + votante.getDni() + " no está en el censo");
             votante.puedeVotar = false;
         }
     }
@@ -43,21 +40,31 @@ public class Censo {
             throw new RuntimeException(e);
         }
         System.out.println("El votante de dni " + votante.getDni() + " acaba de votar");
-        notifyAll();
-        votos++;
+        numVotos++;
         getCola().remove(0);
+        notifyAll();
     }
 
     public void recontarVotos() {
-        try {
-            Thread.sleep(5000);
-            recontando = true;
-            System.out.println("Los votos actuales son --> " + votos);
-            recontando = false;
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        boolean sigue = true;
+        int numVotosAnterior = 0;
+        while (sigue) {
+            try {
+                if (numVotos == ids.size()) {
+                    sigue = false;
+                } else {
+                    Thread.sleep(5000);
+                    recontando = true;
+                    System.out.println("Los votos de este recuento son --> " + (numVotos - numVotosAnterior));
+                    numVotosAnterior = numVotos;
+                    recontando = false;
+                    Thread.sleep(5000);
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
+        System.out.println("Los recuentos totales de la votación son --> " + numVotos);
     }
 
     public static int tiempoVoto() {

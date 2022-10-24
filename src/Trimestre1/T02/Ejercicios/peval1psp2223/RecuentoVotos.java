@@ -1,16 +1,14 @@
 package Trimestre1.T02.Ejercicios.peval1psp2223;
 
 public class RecuentoVotos extends Thread {
-    Censo c;
+    ColegioElectoral c;
 
-    public RecuentoVotos(Censo c) {
+    public RecuentoVotos(ColegioElectoral c) {
         this.c = c;
     }
 
     @Override
     public void run() {
-        while (true) {
-            c.recontarVotos();
-        }
+        c.recontarVotos();
     }
 }
