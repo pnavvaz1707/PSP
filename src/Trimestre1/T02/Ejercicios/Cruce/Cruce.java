@@ -30,6 +30,7 @@ public class Cruce {
 
             while (getBicicletas().size() > 0) {
                 try {
+                    Colores.imprimirRojo(vehiculo.getName() + " ha intentado colarse");
                     wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -41,6 +42,7 @@ public class Cruce {
 
             while (getBicicletas().size() > 0 || getCoches().size() > 0) {
                 try {
+                    Colores.imprimirRojo(vehiculo.getName() + " ha intentado colarse");
                     wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
