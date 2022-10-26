@@ -1,6 +1,6 @@
 package Trimestre1.T02.Ejercicios.Carpinteria.CarpinteriaCaso2;
 
-import Trimestre1.T02.Colores;
+import Trimestre1.T02.Ejercicios.peval1psp2223.Colores;
 
 public class Trabajo2 {
     public static void main(String[] args) {

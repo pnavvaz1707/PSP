@@ -1,6 +1,6 @@
 package Trimestre1.T02.Ejercicios.Habitacion.HabitacionCaso1;
 
-import Trimestre1.T02.Colores;
+import Trimestre1.T02.Ejercicios.peval1psp2223.Colores;
 
 public class Habitacion1 {
 

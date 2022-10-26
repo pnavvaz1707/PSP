@@ -1,7 +1,5 @@
 package Trimestre1.T02.Ejercicios.peval1psp2223;
 
-import Trimestre1.T02.Colores;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,7 +1,5 @@
 package Trimestre1.T02.Ejercicios.peval1psp2223;
 
-import Trimestre1.T02.Colores;
-
 /**
  * Clase que se comporta como un hilo que comprueba si es apto para votar en la tubería y si lo es, vota
  */
