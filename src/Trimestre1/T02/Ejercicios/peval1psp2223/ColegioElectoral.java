@@ -41,9 +41,9 @@ public class ColegioElectoral {
      * @param votante (Hilo de la clase Votante que realiza el voto)
      */
     public synchronized void votar(Votante votante) {
-        while (!getCola().get(0).equals(votante.getDni()) || recontando) {
+        while (!getCola().get(0).equals(votante.getDni()) || isRecontando()) {
             try {
-                Colores.imprimirRojo(votante.getDni() + " ha intentado colarse ( Está recontando = " + recontando + ")");
+                Colores.imprimirRojo(votante.getDni() + " ha intentado colarse ( Está recontando = " + isRecontando() + ")");
                 wait();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
@@ -57,6 +57,7 @@ public class ColegioElectoral {
         }
         System.out.println("El votante de dni " + votante.getDni() + " acaba de votar");
         numVotos++;
+
         getCola().remove(0);
         notifyAll();
     }
@@ -74,11 +75,15 @@ public class ColegioElectoral {
                     sigue = false;
                 } else {
                     Thread.sleep(5000);
-                    recontando = true;
+
+                    setRecontando(true);
+
+                    Thread.sleep(5000);
+
                     System.out.println("Los votos de este recuento son --> " + (numVotos - numVotosAnterior));
                     numVotosAnterior = numVotos;
-                    Thread.sleep(5000);
-                    recontando = false;
+
+                    setRecontando(false);
                     despertarTodos();
                 }
             } catch (InterruptedException e) {
@@ -112,5 +117,23 @@ public class ColegioElectoral {
      */
     public synchronized ArrayList<Integer> getCola() {
         return cola;
+    }
+
+    /**
+     * Método sincronizado que sirve para obtener la variable que indica si se están recontando los votos o no
+     *
+     * @return booleano que indica si el hilo RecuentoVotos está recontando o no
+     */
+    public synchronized boolean isRecontando() {
+        return recontando;
+    }
+
+    /**
+     * Método que permite modificar la variable recontando a true o a false
+     *
+     * @param recontando (Booleano que indica si está recontando o no)
+     */
+    public void setRecontando(boolean recontando) {
+        this.recontando = recontando;
     }
 }
