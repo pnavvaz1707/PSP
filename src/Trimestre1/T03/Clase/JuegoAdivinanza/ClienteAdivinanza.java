@@ -20,28 +20,55 @@ public class ClienteAdivinanza {
 
     private static Scanner teclado = new Scanner(System.in);
 
-    public ClienteAdivinanza(Socket s, String nombre) {
-        cliente = s;
-        this.nombre = nombre;
+//    public ClienteAdivinanza(Socket s, String nombre) {
+//        cliente = s;
+//        this.nombre = nombre;
+//        try {
+//            fentrada = new DataInputStream(cliente.getInputStream());
+//            fsalida = new DataOutputStream(cliente.getOutputStream());
+//            fentrada.readUTF();
+//            int adivinanza = teclado.nextInt();
+//            fsalida.writeInt(adivinanza);
+//        } catch (IOException e) {
+//            System.out.println("ERROR DE E/S");
+//            e.printStackTrace();
+//            System.exit(0);
+//        }
+//    }
+
+    public void initClient() {
         try {
-            fentrada = new DataInputStream(cliente.getInputStream());
+            cliente = new Socket("localhost", PUERTO);
+
             fsalida = new DataOutputStream(cliente.getOutputStream());
-            String texto = " > Entra en el Chat ... " + nombre;
-            fsalida.writeUTF(texto); // escribe mensaje de entrada
+            fentrada = new DataInputStream(cliente.getInputStream());
+
+            do {
+                String mensajeRecibido = fentrada.readUTF();
+                System.out.println("El servidor dice: " + mensajeRecibido);
+
+                int adivinanza = teclado.nextInt();
+
+                fsalida.writeInt(adivinanza);
+                System.out.println("Adivinanza enviada");
+
+                mensajeRecibido = fentrada.readUTF();
+                System.out.println("El servidor dice: " + mensajeRecibido);
+            } while (true);
         } catch (IOException e) {
-            System.out.println("ERROR DE E/S");
-            e.printStackTrace();
-            System.exit(0);
+            throw new RuntimeException(e);
         }
     }
 
     public static void main(String[] args) {
-        try {
-            System.out.println("Iniciado el cliente");
-            Socket s = new Socket("localhost", PUERTO);
-        } catch (IOException e) {
-            System.err.println("No ha conectado " + "a");
-            System.exit(0);
-        }
+//        try {
+        System.out.println("Iniciado el cliente");
+//            Socket s = new Socket("localhost", PUERTO);
+        ClienteAdivinanza c = new ClienteAdivinanza();
+        c.initClient();
+//        } catch (IOException e) {
+//            System.err.println("No ha conectado " + "a");
+//            System.exit(0);
+//        }
     }
 }

@@ -18,9 +18,6 @@ public class ServidorAdivinanza {
 
     private Socket[] conectados = new Socket[MAXIMO_CONEXIONES];
 
-    DataInputStream entrada;
-    DataOutputStream salida;
-
     private void initServer() {
         try {
             servidor = new ServerSocket(PUERTO);
@@ -35,27 +32,11 @@ public class ServidorAdivinanza {
                 System.out.println("Cliente conectado");
 
                 conectados[conexionesActuales] = s;
+
                 conexionesActuales++;
 
-                entrada = new DataInputStream(s.getInputStream());
-                salida = new DataOutputStream(s.getOutputStream());
-
-                int adivinanza;
-                try {
-                    adivinanza = entrada.readInt();
-                    if (adivinanza == 3) {
-                        System.out.println("El cliente ha ganado");
-
-                    } else if (adivinanza < 3) {
-                        System.out.println("El número introducido por el cliente es menor");
-                    } else {
-                        System.out.println("El número introducido por el cliente es mayor");
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-//                Thread hilo = new Thread(new HiloAdivinanza(juegoAdivinanza, s,this));
-//                hilo.start();
+                Thread hilo = new Thread(new HiloAdivinanza(juegoAdivinanza, s, this));
+                hilo.start();
             }
             if (!servidor.isClosed()) {
                 try {
