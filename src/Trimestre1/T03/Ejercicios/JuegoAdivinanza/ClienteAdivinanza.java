@@ -1,9 +1,5 @@
-package Trimestre1.T03.Clase.JuegoAdivinanza;
+package Trimestre1.T03.Ejercicios.JuegoAdivinanza;
 
-import Trimestre1.T03.Clase.Whatsapp.E8ClienteChat;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;

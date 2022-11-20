@@ -1,4 +1,4 @@
-package Trimestre1.T03.Clase.JuegoAdivinanza;
+package Trimestre1.T03.Ejercicios.JuegoAdivinanza;
 
 import java.io.IOException;
 

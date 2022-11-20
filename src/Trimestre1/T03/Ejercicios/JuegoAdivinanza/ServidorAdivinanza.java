@@ -1,14 +1,10 @@
-package Trimestre1.T03.Clase.JuegoAdivinanza;
+package Trimestre1.T03.Ejercicios.JuegoAdivinanza;
 
-import Trimestre1.T03.Clase.Whatsapp.E8HiloServidor;
-
-import java.awt.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 
 public class ServidorAdivinanza {
     private ServerSocket servidor;
@@ -16,7 +12,16 @@ public class ServidorAdivinanza {
     private int conexionesActuales = 0;
     private final int MAXIMO_CONEXIONES = 3;
 
+    private DataOutputStream salida;
+    private DataInputStream entrada;
+
     private Socket[] conectados = new Socket[MAXIMO_CONEXIONES];
+
+    private static String[] tiposConsultas = {
+            "Futurología",
+            "Meeting",
+            "Compras"
+    };
 
     private void initServer() {
         try {
@@ -29,7 +34,13 @@ public class ServidorAdivinanza {
 
                 s = servidor.accept();
 
+                entrada = new DataInputStream(s.getInputStream());
+                salida = new DataOutputStream(s.getOutputStream());
                 System.out.println("Cliente conectado");
+                for (int i = 0; i < tiposConsultas.length; i++) {
+                    System.out.println(tiposConsultas[i]);
+                }
+
 
                 conectados[conexionesActuales] = s;
 
