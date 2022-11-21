@@ -77,6 +77,7 @@ public class HiloServidorCallCenter implements Runnable {
 
             System.out.println(nombre + " ha desconectado");
             cliente.close();
+            ServidorCallCenter.conexionesActuales--;
         } catch (IOException e) {
             e.printStackTrace();
         }

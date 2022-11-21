@@ -5,17 +5,18 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class ServidorCallCenter {
     private ServerSocket servidor;
     private final int PUERTO = 5555;
-    private int conexionesActuales = 0;
+    static int conexionesActuales = 0;
     private final int MAXIMO_CONEXIONES = 3;
 
     private DataOutputStream salida;
     private DataInputStream entrada;
 
-    private Socket[] conectados = new Socket[MAXIMO_CONEXIONES];
+    private ArrayList<Socket> conectados = new ArrayList<>();
 
     private static final String[] tiposConsultas = {
             "Futurología",
@@ -49,14 +50,22 @@ public class ServidorCallCenter {
                 int numTipoConsulta = entrada.readInt();
                 System.out.println("El " + nombre + " ha seleccionado " + tiposConsultas[numTipoConsulta]);
 
-                conectados[conexionesActuales] = s;
+                conectados.add(s);
 
                 conexionesActuales++;
 
                 Thread hilo = new Thread(new HiloServidorCallCenter(s, tiposConsultas[numTipoConsulta], nombre));
                 hilo.start();
             }
-            System.err.println("El servidor se ha llenado");
+            if (!servidor.isClosed()) {
+                try {
+                    System.err.println("El servidor se ha llenado y ya no acepta más clientes");
+                    servidor.close();
+
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -71,15 +80,11 @@ public class ServidorCallCenter {
         return conexionesActuales;
     }
 
-    public void setConexionesActuales(int conexionesActuales) {
-        this.conexionesActuales = conexionesActuales;
-    }
-
-    public Socket[] getConectados() {
+    public ArrayList<Socket> getConectados() {
         return conectados;
     }
 
-    public void setConectados(Socket[] conectados) {
+    public void setConectados(ArrayList<Socket> conectados) {
         this.conectados = conectados;
     }
 }

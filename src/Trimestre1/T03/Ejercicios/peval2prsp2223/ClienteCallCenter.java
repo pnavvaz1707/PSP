@@ -45,8 +45,12 @@ public class ClienteCallCenter {
         System.out.println("Iniciado el cliente");
         ClienteCallCenter c = new ClienteCallCenter();
 
-        c.initClient();
-        c.ejecutar();
+        try {
+            c.initClient();
+            c.ejecutar();
+        } catch (RuntimeException e) {
+            System.err.println("El servidor está cerrado");
+        }
     }
 
     public void ejecutar() {
