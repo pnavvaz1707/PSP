@@ -1,4 +1,4 @@
-package Trimestre1.ExamenJunio;
+package Trimestre1.T03.ExamenJunio;
 
 public class ExamenJunioMain {
     public static void main(String[] args) {

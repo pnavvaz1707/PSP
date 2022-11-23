@@ -42,6 +42,7 @@ public class E8HiloServidor extends Thread {
 									+ E8ServidorChat.ACTUALES);
 					break; // salida del bucle
 				}
+
 				E8ServidorChat.textarea.append(cadena + "\n");
 				texto = E8ServidorChat.textarea.getText();
 				EnviarMensajes(texto); // env�o texto a todos los clientes
