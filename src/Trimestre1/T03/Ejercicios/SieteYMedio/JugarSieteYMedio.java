@@ -1,16 +1,12 @@
-package Trimestre1.T03.Ejercicios.peval2prsp2223;
+package Trimestre1.T03.Ejercicios.SieteYMedio;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.Scanner;
 
-/**
- * Clase que hará de cliente del CallCenter
- */
-public class ClienteCallCenter {
+public class JugarSieteYMedio {
     /**
      * Puerto donde se alojará el servidor del CallCenter
      */
@@ -24,12 +20,12 @@ public class ClienteCallCenter {
     /**
      * Stream de lectura de mensajes en la conexión realizada
      */
-    DataInputStream fentrada;
+    DataInputStream entrada;
 
     /**
      * Stream de escritura de mensajes en la conexión realizada
      */
-    DataOutputStream fsalida;
+    DataOutputStream salida;
 
     /**
      * Cadena de texto que contiene un mensaje recibido por el servidor
@@ -49,28 +45,17 @@ public class ClienteCallCenter {
     /**
      * Método que inicia la conexión del cliente con el servidor
      */
-    public void initClient() throws Exception {
+    public void iniciarJugador() {
         try {
             cliente = new Socket("localhost", PUERTO);
 
             //Recogemos los torrentes de datos y escritura de la conexión
-            fentrada = new DataInputStream(cliente.getInputStream());
-            fsalida = new DataOutputStream(cliente.getOutputStream());
+            entrada = new DataInputStream(cliente.getInputStream());
+            salida = new DataOutputStream(cliente.getOutputStream());
 
-            //Conectamos con el servidor, si está lleno, se lanzará la excepción indicando que el servidor está lleno
-            try {
-                leerTexto();
+            leerTexto();
 
-                escribirTexto();
-
-                leerTexto();
-            } catch (SocketException e) {
-                throw new Exception("El servidor está lleno");
-            }
-
-            int numTipoConsulta = teclado.nextInt();
-            fsalida.writeInt(numTipoConsulta);
-
+            escribirTexto();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -78,38 +63,39 @@ public class ClienteCallCenter {
     }
 
     public static void main(String[] args) {
+
         System.out.println("Iniciado el cliente");
-        ClienteCallCenter c = new ClienteCallCenter();
+        JugarSieteYMedio j = new JugarSieteYMedio();
 
         try {
-            c.initClient();
-            c.ejecutar();
+            j.iniciarJugador();
+            j.jugar();
         } catch (RuntimeException e) {
             System.err.println("El servidor está cerrado");
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
         }
     }
 
-    /**
-     * Método en el que se comunica el cliente con el servidor hasta que el cliente diga "adios"
-     */
-    public void ejecutar() {
+
+    public void jugar() {
 
         boolean sigue = true;
 
         while (sigue) {
             try {
+                leerTexto();
+
+                //Escribimos lo que queremos hacer
                 escribirTexto();
 
                 System.out.println("Esperando respuesta del servidor...");
 
-                if (!mensajeAEnviar.equalsIgnoreCase("adios")) {
+                //Leemos nuestras cartas
+                leerTexto();
 
-                    leerTexto();
+                //Leemos el resto
+                leerTexto();
 
-                    System.out.println("¿Qué respondes?");
-                } else {
+                if (mensajeRecibido.contains("terminado")) {
                     sigue = false;
                 }
 
@@ -120,7 +106,6 @@ public class ClienteCallCenter {
             }
         }
         try {
-            leerTexto();
 
             cliente.close();// Cierre del socket
             System.out.println("Te has desconectado");
@@ -136,7 +121,7 @@ public class ClienteCallCenter {
      * @throws IOException (Excepción que ocurre cuando el servidor cierra y el cliente trata de recibir datos)
      */
     private void leerTexto() throws IOException {
-        mensajeRecibido = fentrada.readUTF();
+        mensajeRecibido = entrada.readUTF();
         System.out.println("El servidor dice: " + mensajeRecibido);
     }
 
@@ -147,6 +132,6 @@ public class ClienteCallCenter {
      */
     private void escribirTexto() throws IOException {
         mensajeAEnviar = teclado.nextLine();
-        fsalida.writeUTF(mensajeAEnviar);
+        salida.writeUTF(mensajeAEnviar);
     }
 }

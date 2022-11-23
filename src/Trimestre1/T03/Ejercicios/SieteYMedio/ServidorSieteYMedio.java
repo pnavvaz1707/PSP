@@ -1,5 +1,6 @@
-package Trimestre1.T03.Ejercicios.peval2prsp2223;
+package Trimestre1.T03.Ejercicios.SieteYMedio;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 /**
  * Clase que hará de servidor del CallCenter
  */
-public class ServidorCallCenter {
+public class ServidorSieteYMedio {
     /**
      * Objeto tipo ServerSocket que servirá como servidor para las conexiones
      */
@@ -31,18 +32,9 @@ public class ServidorCallCenter {
     private final int MAXIMO_CONEXIONES = 3;
 
     /**
-     * Stream de escritura de mensajes en la conexión realizada
+     * Lista dinámica de sockets conectados al servidor
      */
-    private DataOutputStream salida;
-
-    /**
-     * Lista del tipo de consultas que permite el servidor
-     */
-    static final String[] tiposConsultas = {
-            "Futurología",
-            "Meeting",
-            "Compras"
-    };
+    private ArrayList<Socket> conectados = new ArrayList<>();
 
     /**
      * Método que lanza el servidor
@@ -51,39 +43,32 @@ public class ServidorCallCenter {
         try {
             servidor = new ServerSocket(PUERTO);
             System.out.println("Se ha iniciado el servidor");
+            JuegoSieteYMedio juegoSieteYMedio = new JuegoSieteYMedio(MAXIMO_CONEXIONES);
 
             //Se realiza el bucle hasta que se llene el servidor
             while (true) {
                 Socket s;
                 //Aceptamos la conexión recibida
                 s = servidor.accept();
-
-                //Si se ha alcanzado el número máximo de conexiones de clientes, le cerramos la conexión y se lo informamos
                 if (conexionesActuales < MAXIMO_CONEXIONES) {
-                    System.out.println("Cliente conectado");
-                    System.out.println("Inet adress: " + s.getInetAddress());
-                    System.out.println("Local port: " + s.getLocalPort());
-                    System.out.println("Local adress: " + s.getLocalAddress());
 
-                    //Sumamos uno al número de conexiones actuales
+                    conectados.add(s);
+
                     conexionesActuales++;
 
-                    Thread hilo = new Thread(new HiloServidorCallCenter(s));
+                    Thread hilo = new Thread(new JugadorSieteYMedio(s, juegoSieteYMedio));
                     hilo.start();
                 } else {
-                    salida = new DataOutputStream(s.getOutputStream());
-
-                    salida.writeUTF("El servidor está lleno");
-                    s.close();
+                    System.err.println("Máximo de jugadores alcanzados");
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 
     public static void main(String[] args) {
-        ServidorCallCenter servidorAdivinanza = new ServidorCallCenter();
-        servidorAdivinanza.initServer();
+        ServidorSieteYMedio servidorSieteYMedio = new ServidorSieteYMedio();
+        servidorSieteYMedio.initServer();
     }
 }
