@@ -87,10 +87,10 @@ public class JugarSieteYMedio {
                 //Escribimos lo que queremos hacer
                 escribirTexto();
 
-                System.out.println("Esperando respuesta del servidor...");
-
                 //Leemos nuestras cartas
                 leerTexto();
+
+                System.out.println("Esperando respuesta del servidor...");
 
                 //Leemos el resto
                 leerTexto();

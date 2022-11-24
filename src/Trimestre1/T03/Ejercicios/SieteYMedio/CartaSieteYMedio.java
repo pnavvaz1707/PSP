@@ -11,12 +11,6 @@ public class CartaSieteYMedio {
         this.valor = valor;
     }
 
-    public CartaSieteYMedio(PaloSieteYMedio palo, int numero) {
-        this.palo = palo;
-        this.numero = String.valueOf(numero);
-        this.valor = numero;
-    }
-
     public double getValor() {
         return valor;
     }

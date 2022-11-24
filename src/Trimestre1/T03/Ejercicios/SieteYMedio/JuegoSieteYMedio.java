@@ -16,79 +16,94 @@ public class JuegoSieteYMedio {
         this.mazo = new MazoSieteYMedio();
     }
 
-    public synchronized void iniciarJuego(JugadorSieteYMedio jugador) {
+    public synchronized void iniciarJuego(JugadorSieteYMedio jugador) throws IOException {
+        CartaSieteYMedio carta = robarCarta();
 
-        for (int i = 0; i < 2; i++) {
-            CartaSieteYMedio carta = robarCarta();
-
-            jugador.mano.add(carta);
-            System.out.println("El jugador " + jugador.nombre + " ha robado " + carta);
-        }
-
+        jugador.mano.add(carta);
+        System.out.println("El jugador " + jugador.nombre + " ha robado " + carta);
     }
 
     public synchronized void jugar(JugadorSieteYMedio jugador) throws IOException {
-        while (jugadores.size() != numJugadores || jugador.haJugado) {
+        while (jugadores.size() != getNumJugadores() || jugador.haJugado) {
             try {
-                System.err.println("Se ha querio colar " + jugador.nombre);
+                System.err.println("Se ha querio colar " + jugador.nombre + " (Ha jugado = " + jugador.haJugado + ")");
                 wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+        if (!terminado) {
+            System.out.println("Está jugando " + jugador.nombre);
 
-        System.out.println("Está jugando " + jugador.nombre);
+            StringBuilder mensajeCartas = new StringBuilder("¿Cuantas cartas deseas robar? (0 = ninguna)\n");
+            mensajeCartas.append("Cartas actuales:");
+            for (CartaSieteYMedio carta : jugador.mano) {
+                mensajeCartas.append("\n\t-> ").append(carta);
+            }
 
-        StringBuilder mensajeCartas = new StringBuilder("¿Cuantas cartas deseas robar? (0 = ninguna)\n");
-        mensajeCartas.append("Cartas actuales:");
-        for (CartaSieteYMedio carta : jugador.mano) {
-            mensajeCartas.append("\n\t-> ").append(carta);
-        }
+            jugador.salida.writeUTF(mensajeCartas.toString());
 
-        jugador.salida.writeUTF(mensajeCartas.toString());
+            int veces = Integer.parseInt(jugador.entrada.readUTF());
 
-        int veces = Integer.parseInt(jugador.entrada.readUTF());
+            mensajeCartas = new StringBuilder();
 
-        for (int i = 0; i < veces; i++) {
-            CartaSieteYMedio carta = robarCarta();
+            if (veces == 0) {
+                jugador.estado = 'C';
+                mensajeCartas.append("Te has plantado.\n");
+            } else {
+                CartaSieteYMedio carta = robarCarta();
 
-            jugador.mano.add(carta);
-            System.out.println("El jugador " + jugador.nombre + " ha robado " + carta);
-        }
+                jugador.mano.add(carta);
+                System.out.println("El jugador " + jugador.nombre + " ha robado " + carta);
+            }
 
-        mensajeCartas = new StringBuilder();
-        mensajeCartas.append("Cartas actuales:");
-        for (CartaSieteYMedio carta : jugador.mano) {
-            mensajeCartas.append("\n\t-> ").append(carta);
-        }
+            double valorMano = sumarCartas(jugador);
 
-        jugador.salida.writeUTF(mensajeCartas.toString());
+            if (valorMano == 7.5) {
+                jugador.estado = 'G';
+                mensajeCartas.append("Has ganado\n");
+                terminado = true;
+            } else if (valorMano > 7.5) {
+                jugador.estado = 'P';
+            }
 
-        jugador.haJugado = true;
+            mensajeCartas.append("Cartas actuales:");
 
-        if (comprobarTurnos()) {
-            reiniciarRonda();
-        }
+            for (CartaSieteYMedio carta : jugador.mano) {
+                mensajeCartas.append("\n\t-> ").append(carta);
+            }
 
-        notifyAll();
-    }
+            jugador.salida.writeUTF(mensajeCartas.toString());
 
-    public synchronized String mensajeFinal() {
-        String mensajeFinal;
+            jugador.haJugado = true;
 
-        if (terminado) {
-            mensajeFinal = "Ya se ha terminado";
+            if (comprobarTurnos()) {
+                reiniciarRonda();
+            }
         } else {
-            mensajeFinal = "Sigue la partida";
+            if (jugador.estado == 'G') {
+                System.err.println("Q has ganao " + jugador.nombre);
+            } else {
+                jugador.estado = 'P';
+                System.err.println("Has perdio " + jugador.nombre);
+                jugador.conexion.close();
+            }
         }
-
-        return mensajeFinal;
+        notifyAll();
     }
 
     private CartaSieteYMedio robarCarta() {
         CartaSieteYMedio cartaRobada = this.mazo.cartas.get((int) (Math.random() * this.mazo.cartas.size()));
         this.mazo.cartas.remove(cartaRobada);
         return cartaRobada;
+    }
+
+    private double sumarCartas(JugadorSieteYMedio jugador) {
+        double sumaTotal = 0;
+        for (CartaSieteYMedio carta : jugador.mano) {
+            sumaTotal += carta.getValor();
+        }
+        return sumaTotal;
     }
 
     private boolean comprobarTurnos() {
@@ -105,12 +120,32 @@ public class JuegoSieteYMedio {
     }
 
     private void reiniciarRonda() throws IOException {
+        String mensajeFinalRonda = "La partida sigue";
+        String mensajeFinalJuego = "La partida ha terminado";
+
         for (JugadorSieteYMedio jugador : jugadores) {
-            jugador.haJugado = false;
+            if (jugador.estado == 'G') {
+                mensajeFinalJuego += "\nHa ganado --> " + jugador.nombre;
+            } else {
+                jugador.haJugado = false;
+                System.out.println("\t--> Se ha reseteado el jugador " + jugador.nombre);
+            }
         }
-        for (JugadorSieteYMedio jugadore : jugadores) {
-            DataOutputStream salida = new DataOutputStream(jugadore.conexion.getOutputStream());
-            salida.writeUTF(mensajeFinal());
+
+        if (terminado) {
+            enviarMensaje(mensajeFinalJuego);
+        } else {
+            System.out.println("Se ha reiniciado la ronda");
+            enviarMensaje(mensajeFinalRonda);
+        }
+    }
+
+
+    private void enviarMensaje(String mensaje) throws IOException {
+        for (JugadorSieteYMedio jugador : jugadores) {
+            DataOutputStream salida = new DataOutputStream(jugador.conexion.getOutputStream());
+
+            salida.writeUTF(mensaje);
         }
     }
 

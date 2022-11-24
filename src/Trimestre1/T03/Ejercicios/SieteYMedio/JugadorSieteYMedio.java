@@ -15,6 +15,8 @@ public class JugadorSieteYMedio implements Runnable {
     String nombre;
     ArrayList<CartaSieteYMedio> mano;
     JuegoSieteYMedio juegoSieteYMedio;
+
+    char estado = 'S'; // G = Ha ganado, P = Ha perdido, C = Se planta , S = Sigue
     boolean haJugado = false;
 
     /**
@@ -52,7 +54,7 @@ public class JugadorSieteYMedio implements Runnable {
 
             juegoSieteYMedio.iniciarJuego(this);
 
-            while (!juegoSieteYMedio.isTerminado()) {
+            while (estado == 'S') {
                 juegoSieteYMedio.jugar(this);
             }
 

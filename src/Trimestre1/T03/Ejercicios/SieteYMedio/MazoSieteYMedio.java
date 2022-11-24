@@ -10,7 +10,7 @@ public class MazoSieteYMedio {
         for (int i = 0; i < PaloSieteYMedio.values().length; i++) {
             cartas.add(new CartaSieteYMedio(PaloSieteYMedio.values()[i], "A", 1));
             for (int j = 2; j <= 10; j++) {
-                cartas.add(new CartaSieteYMedio(PaloSieteYMedio.values()[i], 1));
+                cartas.add(new CartaSieteYMedio(PaloSieteYMedio.values()[i], String.valueOf(j), 1));
             }
             cartas.add(new CartaSieteYMedio(PaloSieteYMedio.values()[i], "J", 0.5));
             cartas.add(new CartaSieteYMedio(PaloSieteYMedio.values()[i], "Q", 0.5));
