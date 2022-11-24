@@ -95,7 +95,7 @@ public class JugarSieteYMedio {
                 //Leemos el resto
                 leerTexto();
 
-                if (mensajeRecibido.contains("terminado")) {
+                if (mensajeRecibido.contains("ganado")) {
                     sigue = false;
                 }
 

@@ -9,11 +9,13 @@ public class JuegoSieteYMedio {
     ArrayList<JugadorSieteYMedio> jugadores;
     int numJugadores;
     boolean terminado = false;
+    int turno;
 
     public JuegoSieteYMedio(int numJugadores) {
         this.numJugadores = numJugadores;
         this.jugadores = new ArrayList<>(numJugadores);
         this.mazo = new MazoSieteYMedio();
+        this.turno = 0;
     }
 
     public synchronized void iniciarJuego(JugadorSieteYMedio jugador) throws IOException {
@@ -24,9 +26,18 @@ public class JuegoSieteYMedio {
     }
 
     public synchronized void jugar(JugadorSieteYMedio jugador) throws IOException {
-        while (jugadores.size() != getNumJugadores() || jugador.haJugado) {
+        while (jugadores.size() != getNumJugadores()) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        notifyAll();
+        while (jugador.haJugado || jugadores.get(turno) != jugador) {
             try {
                 System.err.println("Se ha querio colar " + jugador.nombre + " (Ha jugado = " + jugador.haJugado + ")");
+                System.err.println("Le toca a " + jugadores.get(turno).nombre + " no a " + jugador.nombre);
                 wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -35,7 +46,7 @@ public class JuegoSieteYMedio {
         if (!terminado) {
             System.out.println("Está jugando " + jugador.nombre);
 
-            StringBuilder mensajeCartas = new StringBuilder("¿Cuantas cartas deseas robar? (0 = ninguna)\n");
+            StringBuilder mensajeCartas = new StringBuilder("¿Cuantas cartas deseas robar? (0 = no)\n");
             mensajeCartas.append("Cartas actuales:");
             for (CartaSieteYMedio carta : jugador.mano) {
                 mensajeCartas.append("\n\t-> ").append(carta);
@@ -55,16 +66,18 @@ public class JuegoSieteYMedio {
 
                 jugador.mano.add(carta);
                 System.out.println("El jugador " + jugador.nombre + " ha robado " + carta);
-            }
 
-            double valorMano = sumarCartas(jugador);
+                double valorMano = sumarCartas(jugador);
 
-            if (valorMano == 7.5) {
-                jugador.estado = 'G';
-                mensajeCartas.append("Has ganado\n");
-                terminado = true;
-            } else if (valorMano > 7.5) {
-                jugador.estado = 'P';
+                if (valorMano == 7.5) {
+                    jugador.estado = 'G';
+                    mensajeCartas.append("Has ganado\n");
+                    terminado = true;
+
+                } else if (valorMano > 7.5) {
+                    jugador.estado = 'P';
+                    mensajeCartas.append("Has perdido\n");
+                }
             }
 
             mensajeCartas.append("Cartas actuales:");
@@ -77,13 +90,26 @@ public class JuegoSieteYMedio {
 
             jugador.haJugado = true;
 
-            if (comprobarTurnos()) {
-                reiniciarRonda();
+            if (terminado) {
+                enviarMensaje("Ha ganado " + jugador.nombre);
+                desconectarJugadores();
+                System.out.println("Jugadores desconectados");
+            } else {
+                if (turno == jugadores.size() - 1) {
+
+                    reiniciarRonda();
+                    enviarMensaje("La partida sigue");
+                    turno = 0;
+                } else {
+                    turno++;
+                }
             }
         } else {
+
             if (jugador.estado == 'G') {
                 System.err.println("Q has ganao " + jugador.nombre);
             } else {
+
                 jugador.estado = 'P';
                 System.err.println("Has perdio " + jugador.nombre);
                 jugador.conexion.close();
@@ -106,38 +132,13 @@ public class JuegoSieteYMedio {
         return sumaTotal;
     }
 
-    private boolean comprobarTurnos() {
-        boolean reiniciar = true;
-        int contador = 0;
 
-        while (reiniciar && contador < jugadores.size()) {
-            if (!jugadores.get(contador).haJugado) {
-                reiniciar = false;
-            }
-            contador++;
-        }
-        return reiniciar;
-    }
-
-    private void reiniciarRonda() throws IOException {
-        String mensajeFinalRonda = "La partida sigue";
-        String mensajeFinalJuego = "La partida ha terminado";
-
+    private void reiniciarRonda() {
         for (JugadorSieteYMedio jugador : jugadores) {
-            if (jugador.estado == 'G') {
-                mensajeFinalJuego += "\nHa ganado --> " + jugador.nombre;
-            } else {
-                jugador.haJugado = false;
-                System.out.println("\t--> Se ha reseteado el jugador " + jugador.nombre);
-            }
+            jugador.haJugado = false;
+            System.out.println("\t--> Se ha reseteado el jugador " + jugador.nombre);
         }
-
-        if (terminado) {
-            enviarMensaje(mensajeFinalJuego);
-        } else {
-            System.out.println("Se ha reiniciado la ronda");
-            enviarMensaje(mensajeFinalRonda);
-        }
+        System.out.println("Se ha reiniciado la ronda");
     }
 
 
@@ -146,6 +147,12 @@ public class JuegoSieteYMedio {
             DataOutputStream salida = new DataOutputStream(jugador.conexion.getOutputStream());
 
             salida.writeUTF(mensaje);
+        }
+    }
+
+    private void desconectarJugadores() throws IOException {
+        for (JugadorSieteYMedio jugador : jugadores) {
+            jugador.conexion.close();
         }
     }
 
