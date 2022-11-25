@@ -124,6 +124,7 @@ public class JuegoSieteYMedio {
         return cartaRobada;
     }
 
+    //todo Cada jugador juega hasta que se planta y al final de todo la banca, que sabe todas las cartas, juega al final del todo y tiene que empatar o ganar
     private double sumarCartas(JugadorSieteYMedio jugador) {
         double sumaTotal = 0;
         for (CartaSieteYMedio carta : jugador.mano) {

@@ -59,6 +59,7 @@ public class ServidorSieteYMedio {
                     Thread hilo = new Thread(new JugadorSieteYMedio(s, juegoSieteYMedio));
                     hilo.start();
                 } else {
+                    s.close();
                     System.err.println("Máximo de jugadores alcanzados");
                 }
             }

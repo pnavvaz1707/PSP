@@ -71,7 +71,7 @@ public class JugarSieteYMedio {
             j.iniciarJugador();
             j.jugar();
         } catch (RuntimeException e) {
-            System.err.println("El servidor está cerrado");
+            System.err.println("El servidor está lleno o cerrrado");
         }
     }
 
