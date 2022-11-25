@@ -1,4 +1,4 @@
-package Trimestre1.T03.ExamenJunio;
+package Trimestre1.ExamenesAntiguos.ExamenJunio;
 
 public class Botella implements Runnable{
 

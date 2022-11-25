@@ -1,4 +1,4 @@
-package Trimestre1.T03.ExamenJunio;
+package Trimestre1.ExamenesAntiguos.ExamenJunio;
 
 import Trimestre1.T02.Ejercicios.peval1psp2223.Colores;
 
