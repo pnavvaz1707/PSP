@@ -62,7 +62,6 @@ public class HiloServidorCallCenter implements Runnable {
         try {
             salida.writeUTF("Introduce un nombre: ");
             nombre = entrada.readUTF();
-
             System.out.println(nombre + " seleccionando tipo de consulta...");
             String mensajeSelConsulta = "Selecciona el tipo de su consulta";
 
