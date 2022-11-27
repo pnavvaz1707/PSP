@@ -19,7 +19,7 @@ public class JuegoSieteYMedio {
     }
 
     public synchronized void iniciarJuego(JugadorSieteYMedio jugador) throws IOException {
-        CartaSieteYMedio carta = robarCarta();
+        CartaSieteYMedio carta = mazo.robarCarta();
 
         jugador.mano.add(carta);
         System.out.println("El jugador " + jugador.nombre + " ha robado " + carta);
@@ -62,7 +62,7 @@ public class JuegoSieteYMedio {
                 jugador.estado = 'C';
                 mensajeCartas.append("Te has plantado.\n");
             } else {
-                CartaSieteYMedio carta = robarCarta();
+                CartaSieteYMedio carta = mazo.robarCarta();
 
                 jugador.mano.add(carta);
                 System.out.println("El jugador " + jugador.nombre + " ha robado " + carta);
@@ -116,12 +116,6 @@ public class JuegoSieteYMedio {
             }
         }
         notifyAll();
-    }
-
-    private CartaSieteYMedio robarCarta() {
-        CartaSieteYMedio cartaRobada = this.mazo.cartas.get((int) (Math.random() * this.mazo.cartas.size()));
-        this.mazo.cartas.remove(cartaRobada);
-        return cartaRobada;
     }
 
     //todo Cada jugador juega hasta que se planta y al final de todo la banca, que sabe todas las cartas, juega al final del todo y tiene que empatar o ganar

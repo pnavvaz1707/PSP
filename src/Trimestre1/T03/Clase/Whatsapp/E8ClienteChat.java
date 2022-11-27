@@ -111,7 +111,7 @@ public class E8ClienteChat extends JFrame implements ActionListener {
 		Socket s = null;
 		try {
 			// cliente y servidor se ejecutan en la m�quina local
-			s = new Socket("192.168.1.142", puerto);
+			s = new Socket("localhost", puerto);
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null,
 					"IMPOSIBLE CONECTAR CON EL SERVIDOR\n" + e.getMessage(),

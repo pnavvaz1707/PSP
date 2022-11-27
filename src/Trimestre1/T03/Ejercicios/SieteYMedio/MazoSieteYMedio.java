@@ -1,7 +1,6 @@
 package Trimestre1.T03.Ejercicios.SieteYMedio;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class MazoSieteYMedio {
     ArrayList<CartaSieteYMedio> cartas = new ArrayList<>();
@@ -16,6 +15,12 @@ public class MazoSieteYMedio {
             cartas.add(new CartaSieteYMedio(PaloSieteYMedio.values()[i], "Q", 0.5));
             cartas.add(new CartaSieteYMedio(PaloSieteYMedio.values()[i], "K", 0.5));
         }
+    }
+
+    public CartaSieteYMedio robarCarta() {
+        CartaSieteYMedio cartaRobada = this.cartas.get((int) (Math.random() * this.cartas.size()));
+        this.cartas.remove(cartaRobada);
+        return cartaRobada;
     }
 
 //    public void robar(ArrayList<JugadorB> jugadores, int veces) {
