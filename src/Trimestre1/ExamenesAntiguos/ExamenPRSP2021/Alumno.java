@@ -2,8 +2,12 @@ package Trimestre1.ExamenesAntiguos.ExamenPRSP2021;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Alumno {
@@ -12,6 +16,7 @@ public class Alumno {
     private DataOutputStream salida;
     private String mensajeRecibido;
     private String mensajeAEnviar;
+
     private Scanner teclado = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -20,6 +25,10 @@ public class Alumno {
             Alumno alumno = new Alumno();
             alumno.iniciarAlumno();
 
+        } catch (ConnectException e) {
+            System.err.println("La clase está cerrada");
+        } catch (EOFException e) {
+            System.err.println("La clase está llena");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -44,6 +53,9 @@ public class Alumno {
         escribirTexto();
 
         //Profesor agradece
+        leerTexto();
+
+        //Leer respuestas de los demás alumnos
         leerTexto();
     }
 

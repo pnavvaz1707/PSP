@@ -28,6 +28,7 @@ public class HiloProfesor implements Runnable {
             conexiones.registrar(this);
             conexiones.preguntar(this);
             conexiones.recibirRespuesta(this);
+            conexiones.verResultados(this);
 
         } catch (IOException e) {
             e.printStackTrace();
