@@ -5,7 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public class HiloServidorNSM implements Runnable {
+public class ConexionJugadorNSM implements Runnable {
 
     /*
     Escribe
@@ -21,7 +21,10 @@ public class HiloServidorNSM implements Runnable {
     double valorCartas = 0;
     char estado = 'S'; // L = Ha perdido, S = Sigue jugando, W = Ha ganado, C = Se planta
 
-    public HiloServidorNSM(JuegoNSM j, Socket conexion) {
+    public ConexionJugadorNSM(){
+
+    }
+    public ConexionJugadorNSM(JuegoNSM j, Socket conexion) {
         this.j = j;
         this.conexion = conexion;
 
@@ -47,6 +50,7 @@ public class HiloServidorNSM implements Runnable {
             while (estado == 'S') {
                 j.jugar(this);
             }
+            j.esperarResultado(this);
         } catch (IOException e) {
             e.printStackTrace();
         }

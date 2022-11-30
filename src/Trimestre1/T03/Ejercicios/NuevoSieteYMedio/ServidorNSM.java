@@ -21,7 +21,7 @@ public class ServidorNSM {
 
                 conexionesActuales++;
 
-                Thread hilo = new Thread(new HiloServidorNSM(juegoNSM, s));
+                Thread hilo = new Thread(new ConexionJugadorNSM(juegoNSM, s));
                 hilo.start();
             } else {
                 System.err.println("No cabe");

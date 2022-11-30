@@ -1,5 +1,7 @@
 package Trimestre1.T03.Ejercicios.NuevoSieteYMedio;
 
+import Trimestre1.T02.Ejercicios.peval1psp2223.Colores;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -36,22 +38,45 @@ public class ClienteNSM {
 
         System.out.println("Cliente iniciado");
 
+        //Pide nombre
         mensajeRecibido = entrada.readUTF();
         System.out.println("El servidor dice: " + mensajeRecibido);
 
+        //Introduce nombre
         mensajeAEnviar = teclado.nextLine();
         salida.writeUTF(mensajeAEnviar);
 
     }
 
     private void ejecutar() throws IOException {
-        System.out.println("Empieza");
-        while (true){
-            mensajeRecibido = entrada.readUTF();
-            System.out.println("El servidor dice: " + mensajeRecibido);
+        boolean sigueJugando = true;
 
-            mensajeAEnviar = teclado.nextLine();
-            salida.writeUTF(mensajeAEnviar);
+        while (sigueJugando) {
+            //Empieza el juego
+
+            System.out.println("Esperando respuesta del servidor...");
+
+
+            mensajeRecibido = entrada.readUTF();
+            Colores.imprimirMorado("El servidor dice: " + mensajeRecibido);
+
+            if (mensajeRecibido.contains("perdido") || mensajeRecibido.contains("ganado")) {
+                sigueJugando = false;
+
+            } else {
+                mensajeAEnviar = teclado.nextLine();
+                salida.writeUTF(mensajeAEnviar);
+
+                System.out.println("Esperando respuesta del servidor...");
+
+                mensajeRecibido = entrada.readUTF();
+                Colores.imprimirAzul("El servidor dice: " + mensajeRecibido);
+
+                if (mensajeRecibido.contains("perdido") || mensajeRecibido.contains("ganado")) {
+                    sigueJugando = false;
+
+                }
+            }
         }
     }
 }
