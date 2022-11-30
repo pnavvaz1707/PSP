@@ -1,5 +1,7 @@
 package Trimestre1.T03.Ejercicios.NuevoSieteYMedio;
 
+import Trimestre1.T02.Ejercicios.peval1psp2223.Colores;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -13,10 +15,6 @@ public class JuegoNSM {
     boolean ultimaRonda;
     boolean terminado;
     int jugadoresActuales = 0;
-    /*
-    Escribe
-    Lee
-     */
 
     public JuegoNSM(int maxJugadores) {
         this.maxJugadores = maxJugadores;
@@ -78,6 +76,7 @@ public class JuegoNSM {
             } else {
                 jugador.estado = 'C';
                 eliminarJugador(jugador);
+
             }
             if (!terminado) {
                 if (turno < jugadores.size() - 1) {
@@ -86,8 +85,6 @@ public class JuegoNSM {
                 } else {
                     turno = 0;
                 }
-
-
                 if (jugadoresTerminados.size() == maxJugadores) {
                     ConexionJugadorNSM jugadorGanador = new ConexionJugadorNSM();
 
@@ -131,50 +128,10 @@ public class JuegoNSM {
         ultimaRonda = true;
     }
 
-    private String robarCarta() {
-        String carta;
-        do {
-            try {
-                carta = baraja.extraerCarta();
-            } catch (IndexOutOfBoundsException e) {
-                carta = null;
-            }
-        } while (carta == null);
-
-        return carta;
-
-    }
-
-    private void eliminarJugador(ConexionJugadorNSM jugador) {
-        jugadores.remove(jugador);
-        jugadoresTerminados.add(jugador);
-    }
-
-    private double calcularValorCarta(String carta) {
-        double valor;
-        switch (carta.charAt(0)) {
-            case '1', '2', '3', '4', '5', '6', '7':
-                valor = 1;
-                break;
-            default:
-                valor = 0.5;
-                break;
-        }
-        return valor;
-    }
-
     private void turnoBanca(ConexionJugadorNSM jugador) {
         double valorBanca = 0;
         do {
-            String carta;
-            do {
-                try {
-                    carta = baraja.extraerCarta();
-                } catch (IndexOutOfBoundsException e) {
-                    carta = null;
-                    System.out.println("Error al robar carta " + e.getMessage());
-                }
-            } while (carta == null);
+            String carta = robarCarta();
 
             System.out.println("La banca roba " + carta);
 
@@ -202,14 +159,42 @@ public class JuegoNSM {
                 e.printStackTrace();
             }
         }
-        decirResultado(jugador);
-    }
-
-    public void decirResultado(ConexionJugadorNSM jugador) throws IOException {
         if (jugador.estado == 'G') {
             jugador.salida.writeUTF("Has ganado");
         } else {
             jugador.salida.writeUTF("Has perdido");
         }
+    }
+
+    private String robarCarta() {
+        String carta;
+        do {
+            try {
+                carta = baraja.extraerCarta();
+            } catch (IndexOutOfBoundsException e) {
+                carta = null;
+            }
+        } while (carta == null);
+
+        return carta;
+    }
+
+    private void eliminarJugador(ConexionJugadorNSM jugador) {
+        jugadores.remove(jugador);
+        jugadoresTerminados.add(jugador);
+        turno -= 1;
+    }
+
+    private double calcularValorCarta(String carta) {
+        double valor;
+        switch (carta.charAt(0)) {
+            case '1', '2', '3', '4', '5', '6', '7':
+                valor = 1;
+                break;
+            default:
+                valor = 0.5;
+                break;
+        }
+        return valor;
     }
 }

@@ -56,9 +56,8 @@ public class ClienteNSM {
 
             System.out.println("Esperando respuesta del servidor...");
 
-
             mensajeRecibido = entrada.readUTF();
-            Colores.imprimirMorado("El servidor dice: " + mensajeRecibido);
+            System.out.println("El servidor dice: " + mensajeRecibido);
 
             if (mensajeRecibido.contains("perdido") || mensajeRecibido.contains("ganado")) {
                 sigueJugando = false;
@@ -70,7 +69,7 @@ public class ClienteNSM {
                 System.out.println("Esperando respuesta del servidor...");
 
                 mensajeRecibido = entrada.readUTF();
-                Colores.imprimirAzul("El servidor dice: " + mensajeRecibido);
+                System.out.println("El servidor dice: " + mensajeRecibido);
 
                 if (mensajeRecibido.contains("perdido") || mensajeRecibido.contains("ganado")) {
                     sigueJugando = false;
