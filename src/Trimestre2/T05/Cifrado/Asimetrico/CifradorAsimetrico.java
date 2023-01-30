@@ -1,4 +1,4 @@
-package Trimestre2.T05.Cifrado.Simetrico;
+package Trimestre2.T05.Cifrado.Asimetrico;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -11,16 +11,16 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-public class Cifrador {
-    public static void cifrarFichero(File clave, File ficheroDescifrado, File rutaFicheroCifrado,String algoritmo){
+public class CifradorAsimetrico {
+    public static void cifrarFichero(File rutaClavePublica, File ficheroDescifrado, File rutaFicheroCifrado){
         try {
-            Cipher cipher = Cipher.getInstance(algoritmo);
-            cipher.init(Cipher.ENCRYPT_MODE, GeneradorClave.recuperarClave(clave));
+            Cipher cipher = Cipher.getInstance("RSA");
+            cipher.init(Cipher.ENCRYPT_MODE, GeneradorClavesAsimetricas.recuperarClavePublica(rutaClavePublica));
 
             FileInputStream fis = new FileInputStream(ficheroDescifrado);
             FileOutputStream fos = new FileOutputStream(rutaFicheroCifrado);
 
-            byte [] buffer = new byte[8];
+            byte [] buffer = new byte[16];
             int bytes_leidos = fis.read(buffer);
 
             while (bytes_leidos != -1){

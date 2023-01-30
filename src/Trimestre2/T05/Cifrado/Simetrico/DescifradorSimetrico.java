@@ -11,11 +11,11 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-public class Descifrador {
+public class DescifradorSimetrico {
     public static void descifrarFichero(File clave, File rutaFicheroDescifrado, File ficheroCifrado,String algoritmo){
         try {
             Cipher cipher = Cipher.getInstance(algoritmo);
-            cipher.init(Cipher.DECRYPT_MODE, GeneradorClave.recuperarClave(clave));
+            cipher.init(Cipher.DECRYPT_MODE, GeneradorClavesSimetricas.recuperarClaveDES(clave));
 
             FileInputStream fis = new FileInputStream(ficheroCifrado);
             FileOutputStream fos = new FileOutputStream(rutaFicheroDescifrado);

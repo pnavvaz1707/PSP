@@ -2,7 +2,7 @@ package Trimestre2.T05.Cifrado.Simetrico;
 
 import java.io.File;
 
-public class UsarClase {
+public class UsarClasesSimetricas {
     public static void main(String[] args) {
         File ficheroClave = new File("src/Trimestre2/T05/Cifrado/Simetrico/ClaveP.txt");
         File ficheroCifrado = new File("src/Trimestre2/T05/Cifrado/Simetrico/CifradoP.txt");
@@ -10,8 +10,8 @@ public class UsarClase {
 
         String algoritmo = "DES";
 
-        GeneradorClave.generarClave(ficheroClave, algoritmo);
-        Cifrador.cifrarFichero(ficheroClave, ficheroDescifrado, ficheroCifrado, algoritmo);
+        GeneradorClavesSimetricas.generarClaveDESYGuardarEnFichero(ficheroClave);
+        CifradorSimetrico.cifrarFichero(ficheroClave, ficheroDescifrado, ficheroCifrado, algoritmo);
 //        Descifrador.descifrarFichero(ficheroClave,ficheroDescifrado,ficheroCifrado,algoritmo);
     }
 }

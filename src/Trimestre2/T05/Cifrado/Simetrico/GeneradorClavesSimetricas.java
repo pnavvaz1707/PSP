@@ -13,13 +13,25 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
-public class GeneradorClave {
-    public static void generarClave(File rutaClave,String algortimo) {
+public class GeneradorClavesSimetricas {
+    public static SecretKey generarClave(String algortimo) {
+        SecretKey key;
         try {
             KeyGenerator keyGenerator = KeyGenerator.getInstance(algortimo);
+            key = keyGenerator.generateKey();
+
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        return key;
+    }
+
+    public static void generarClaveDESYGuardarEnFichero(File rutaClave) {
+        try {
+            KeyGenerator keyGenerator = KeyGenerator.getInstance("DES");
             SecretKey key = keyGenerator.generateKey();
 
-            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(algortimo);
+            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
 
             DESKeySpec keySpec = (DESKeySpec) keyFactory.getKeySpec(key, DESKeySpec.class);
 
@@ -33,12 +45,12 @@ public class GeneradorClave {
         }
     }
 
-    public static Key recuperarClave(File rutaClave){
+    public static Key recuperarClaveDES(File rutaClave) {
         SecretKey key;
         try {
             FileInputStream fisClave = new FileInputStream(rutaClave);
 
-            byte [] clave = new byte[(int) rutaClave.length()];
+            byte[] clave = new byte[(int) rutaClave.length()];
             fisClave.read(clave);
 
             fisClave.close();
