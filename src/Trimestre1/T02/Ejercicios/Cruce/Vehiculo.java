@@ -5,7 +5,7 @@ public class Vehiculo extends Thread {
     Cruce cruce;
     String color;
 
-    public Vehiculo(String nombre, TiposVehiculo tipo, Cruce cruce,String color) {
+    public Vehiculo(String nombre, TiposVehiculo tipo, Cruce cruce, String color) {
         this.setName(nombre);
         this.tipo = tipo;
         this.cruce = cruce;
@@ -14,11 +14,22 @@ public class Vehiculo extends Thread {
 
     @Override
     public void run() {
-        cruce.llegar(this);
-        cruce.cruzar(this);
+        try {
+            sleep(numRandom(1,10));
+            cruce.llegar(this);
+            sleep(numRandom(0,2));
+            cruce.cruzar(this);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public String getColor() {
         return color;
+    }
+
+    private int numRandom(int limiteInferior, int limiteSuperior) {
+        return (int) (Math.random() * ((limiteSuperior - limiteInferior) * 1000) + (limiteInferior * 1000));
     }
 }
