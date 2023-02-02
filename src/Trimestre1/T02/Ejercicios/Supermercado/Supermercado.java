@@ -37,9 +37,6 @@ public class Supermercado {
             Colores.imprimirVerde("El " + cliente + " ya ha pagado");
             cola.remove(0);
             Colores.imprimirAzul("Cola actual");
-            for (int i = 0; i < cola.size(); i++) {
-                Colores.imprimirMorado(i + ". " + cola.get(i));
-            }
             notifyAll();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);

@@ -13,7 +13,7 @@ public class Atleta extends Thread {
     @Override
     public void run() {
         p.prepararse();
-        while (distancaRecorrida<p.getDistanciaPista()) {
+        while (distancaRecorrida < p.getDistanciaPista()) {
             try {
                 int tiempoZancada = tiempoZancada();
                 sleep(tiempoZancada);
