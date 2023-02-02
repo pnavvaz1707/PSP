@@ -60,7 +60,7 @@ public class Macdonal {
             Colores.imprimirVerde("Pedido terminado de " + clienteRecoger.nombre);
             setPedidoListo(true);
             despertar();
-            if (getColaPedir().isEmpty()){
+            if (getColaPedir().isEmpty() && getColaRecoger().isEmpty()){
                 cocinaAbierta = false;
             }
         } catch (InterruptedException e) {
