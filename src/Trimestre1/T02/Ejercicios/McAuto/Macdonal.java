@@ -7,7 +7,7 @@ public class Macdonal {
     private ArrayList<Cliente> colaPedir = new ArrayList<>();
     private ArrayList<Cliente> colaRecoger = new ArrayList<>();
     private boolean pedidoListo = false;
-    boolean cocinaAbierta;
+    boolean cocinaAbierta = true;
 
     public void ponerseEnCola(Cliente cliente) {
         getColaPedir().add(cliente);
