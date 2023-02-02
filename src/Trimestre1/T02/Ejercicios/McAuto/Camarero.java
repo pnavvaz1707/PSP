@@ -12,7 +12,7 @@ public class Camarero implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
+        while (mac.cocinaAbierta) {
             mac.cocinar();
         }
 //        try {

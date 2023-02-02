@@ -7,6 +7,7 @@ public class Macdonal {
     private ArrayList<Cliente> colaPedir = new ArrayList<>();
     private ArrayList<Cliente> colaRecoger = new ArrayList<>();
     private boolean pedidoListo = false;
+    boolean cocinaAbierta;
 
     public void ponerseEnCola(Cliente cliente) {
         getColaPedir().add(cliente);
@@ -47,22 +48,36 @@ public class Macdonal {
         notifyAll();
     }
 
-    public synchronized void cocinar() {
+    public void cocinar() {
         try {
             while (getColaRecoger().isEmpty()) {
                 Colores.imprimirRojo("Está esperando pedidos para cocinar");
-                wait();
+                dormir();
             }
             Cliente clienteRecoger = getColaRecoger().get(0);
             Colores.imprimirAzul("Cocinando pedido de " + clienteRecoger.nombre + "...");
             Thread.sleep(tiempoCocina());
             Colores.imprimirVerde("Pedido terminado de " + clienteRecoger.nombre);
             setPedidoListo(true);
-            notifyAll();
+            despertar();
+            if (getColaPedir().isEmpty()){
+                cocinaAbierta = false;
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
 
+    private synchronized void dormir() {
+        try {
+            wait();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private synchronized void despertar() {
+        notifyAll();
     }
 
     public synchronized boolean isPedidoListo() {
