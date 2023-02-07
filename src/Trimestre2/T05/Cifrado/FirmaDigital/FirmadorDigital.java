@@ -11,8 +11,6 @@ import java.security.SignatureException;
 
 public class FirmadorDigital {
 
-    //Algoritmo híbrido (DSA Y RSA)
-
     public static void firmarDocumento(File fClavePrivada, File ficheroAFirmar, File ficheroFirmado) {
         try {
             Signature signature = Signature.getInstance("DSA");

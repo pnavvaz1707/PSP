@@ -8,10 +8,8 @@ public class UsarClasesSimetricas {
         File ficheroCifrado = new File("src/Trimestre2/T05/Cifrado/Simetrico/CifradoP.txt");
         File ficheroDescifrado = new File("src/Trimestre2/T05/Cifrado/Simetrico/DescifradoP.txt");
 
-        String algoritmo = "DES";
-
         GeneradorClavesSimetricas.generarClaveDESYGuardarEnFichero(ficheroClave);
-        CifradorSimetrico.cifrarFichero(ficheroClave, ficheroDescifrado, ficheroCifrado, algoritmo);
+        CifradorSimetrico.cifrarFichero(ficheroClave, ficheroDescifrado, ficheroCifrado);
 //        Descifrador.descifrarFichero(ficheroClave,ficheroDescifrado,ficheroCifrado,algoritmo);
     }
 }

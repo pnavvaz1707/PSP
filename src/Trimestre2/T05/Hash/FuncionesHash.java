@@ -30,7 +30,7 @@ public class FuncionesHash {
         return new String(md.digest());
     }
 
-    private static void guardarHashFichero(String hash, File f) throws IOException {
+    public static void guardarHashFichero(String hash, File f) throws IOException {
         PrintWriter pw = new PrintWriter(f);
         pw.write(hash);
         pw.close();

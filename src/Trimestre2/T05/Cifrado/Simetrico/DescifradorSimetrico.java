@@ -12,9 +12,9 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 public class DescifradorSimetrico {
-    public static void descifrarFichero(File clave, File rutaFicheroDescifrado, File ficheroCifrado,String algoritmo){
+    public static void descifrarFichero(File clave, File rutaFicheroDescifrado, File ficheroCifrado){
         try {
-            Cipher cipher = Cipher.getInstance(algoritmo);
+            Cipher cipher = Cipher.getInstance("DES");
             cipher.init(Cipher.DECRYPT_MODE, GeneradorClavesSimetricas.recuperarClaveDES(clave));
 
             FileInputStream fis = new FileInputStream(ficheroCifrado);
